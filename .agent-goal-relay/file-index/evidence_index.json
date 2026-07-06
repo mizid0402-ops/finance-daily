@@ -1,0 +1,16 @@
+{
+    "index_version":  "1.0.0",
+    "root":  "F:\\workspace\\小玩意\\财报每日推送",
+    "updated_at":  "2026-07-06T07:16:45.8919551Z",
+    "counts":  {
+                   "evidence":  0,
+                   "jsonl_errors":  0
+               },
+    "recent_evidence":  [
+
+                        ],
+    "limits":  {
+                   "max_recent_evidence_items":  5,
+                   "max_text_chars":  240
+               }
+}

@@ -1,0 +1,105 @@
+{
+    "index_version":  "1.0.0",
+    "root":  "F:\\workspace\\小玩意\\财报每日推送",
+    "updated_at":  "2026-07-06T07:16:45.8621546Z",
+    "run_status":  {
+                       "run_id":  "finance_daily_next_blocks_20260706",
+                       "goal_contract_ref":  ".agent-goal-relay/relay-state/state.md",
+                       "exec_plan_ref":  "docs/superpowers/plans/2026-07-06-finance-daily-next-blocks.md",
+                       "current_phase_id":  "phase_04_human_gate",
+                       "current_work_block_id":  "006-github-remote-setup",
+                       "relay_state":  "wait_human",
+                       "updated_at":  "2026-07-06T15:23:00+08:00",
+                       "budget_snapshot":  {
+                                               "sessions_used":  1,
+                                               "tokens_used":  0,
+                                               "elapsed_minutes":  0,
+                                               "tool_calls_used":  0,
+                                               "external_cost":  {
+                                                                     "amount":  0,
+                                                                     "currency":  ""
+                                                                 },
+                                               "remaining_notes":  "Local low-risk work-blocks are complete; external GitHub and publishing decisions require human input."
+                                           },
+                       "next_recommended_action":  "Ask the user for GitHub remote setup choices before any external action.",
+                       "latest_outcome":  "Prepared GitHub remote setup guide and stopped before external repository, push, Pages, secrets, or SITE_URL decisions.",
+                       "worker_last_result":  null,
+                       "worker_budget_snapshot":  null
+                   },
+    "counts":  {
+                   "work_blocks":  8,
+                   "evidence":  0,
+                   "pending_approval_records":  0,
+                   "pending_approvals":  0,
+                   "decision_queue":  0,
+                   "jsonl_errors":  0,
+                   "search_asset_records":  0
+               },
+    "recent_work_blocks":  [
+                               {
+                                   "event_id":  "9896a5f4-2df0-4dc3-93de-e34d86ecc719",
+                                   "sequence":  6,
+                                   "created_at":  "2026-07-06T07:11:39.3040671Z",
+                                   "block_id":  "004-rss-publishing-url",
+                                   "work_block_type":  null,
+                                   "phase_id":  null,
+                                   "status":  "completed",
+                                   "risk_level":  "low",
+                                   "title":  "",
+                                   "summary":  "SITE_URL now configures RSS base URL with default fallback; focused/full pytest and py src/main.py passed.",
+                                   "next_action":  "",
+                                   "next_relay_state":  null
+                               },
+                               {
+                                   "event_id":  "83453b8a-6865-45bd-b9f4-caa49fb2b665",
+                                   "sequence":  7,
+                                   "created_at":  "2026-07-06T07:14:48.2068303Z",
+                                   "block_id":  "005-actions-hardening",
+                                   "work_block_type":  null,
+                                   "phase_id":  null,
+                                   "status":  "completed",
+                                   "risk_level":  "low",
+                                   "title":  "",
+                                   "summary":  "Workflow now runs tests before generation, uses pip caching and concurrency, passes SITE_URL, and pushes only when generated outputs change; pytest and YAML parse passed.",
+                                   "next_action":  "",
+                                   "next_relay_state":  null
+                               },
+                               {
+                                   "event_id":  "723bc95a-d19e-4cf0-8a09-9843a2084c87",
+                                   "sequence":  8,
+                                   "created_at":  "2026-07-06T07:15:44.2863211Z",
+                                   "block_id":  "006-github-remote-setup",
+                                   "work_block_type":  null,
+                                   "phase_id":  null,
+                                   "status":  "completed",
+                                   "risk_level":  "low",
+                                   "title":  "",
+                                   "summary":  "Prepared GitHub remote setup guide and README link; stopped before external repo, push, Pages, secrets, or SITE_URL decisions.",
+                                   "next_action":  "",
+                                   "next_relay_state":  null
+                               }
+                           ],
+    "pending_approvals":  [
+
+                          ],
+    "search_assets":  {
+                          "index_path":  "F:\\workspace\\小玩意\\财报每日推送\\.agent-goal-relay\\file-index\\search_assets\\indexes\\search_asset_index.json",
+                          "exists":  false,
+                          "record_count":  0,
+                          "unique_urls":  0,
+                          "unique_domains":  0,
+                          "counts":  null,
+                          "top_demand_categories":  [
+
+                                                    ],
+                          "top_exclusion_reasons":  [
+
+                                                    ]
+                      },
+    "limits":  {
+                   "max_recent_work_blocks":  3,
+                   "max_recent_evidence_items":  5,
+                   "max_pending_approvals":  3,
+                   "max_text_chars":  240
+               }
+}

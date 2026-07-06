@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>财经 AI 日报</title>
+    <link>https://example.com/finance-daily</link>
+    <description>自动生成的财经新闻、产业链分析与公司映射日报</description>
+    <language>zh-CN</language>
+    <lastBuildDate>Mon, 06 Jul 2026 07:11:14 +0000</lastBuildDate>
+    <item>
+      <title>财经日报-2026-07-06</title>
+      <link>https://example.com/finance-daily/backup/2026-07-06.md</link>
+      <guid>https://example.com/finance-daily/backup/2026-07-06.md</guid>
+      <pubDate>Mon, 06 Jul 2026 00:00:00 +0000</pubDate>
+      <description># 财经日报-2026-07-06
+
+## 一、市场总览
+
+最近 24 小时财经信息按主题聚合如下：
+
+共抓取 **8** 个事件聚类，覆盖 **4** 个行业类别，来自 **4** 个信息来源。
+
+- **综合财经**：The Smartest Vanguard ETF to Buy With $1,000 Right Now（66 条来源）
+- **科技与半导体**：‘The Borrower Is Slave to the Lender’: Dave Ramsey Warns a 22-Year-Old Against L（11 条来源）
+- **综合财经**：Why Did General Motors (GM) Just Partner With Micron?（4 条来源）
+- **新能源与汽车**：Foxconn second-quarter revenue jumps, company cautions on geopolitics（2 条来源）
+- **新能源与汽车**：Why Iran may find it difficult to clear its oil inventories even after sanctions（2 条来源）
+- **金融与地产**：Mortgage and refinance interest rates today, Saturday, July 4: Rates are mixed t（2 条来源）
+- **综合财经**：Travel Headwinds Result In Attractive Valuation For Global Payments (GPN) Stocks（1 条来源）
+- **综合财经**：AeroVironment (AVAV) Garners Positive Sentiment Following Latest UGV Launch（1 条来源）
+
+&gt; LLM 生成暂不可用，已输出规则模板草稿。错误：OPENAI_API_KEY is not set
+
+
+## 二、今日核心事件
+
+1. **The Smartest Vanguard ETF to Buy With $1,000 Right Now**
+   - 分类：综合财经
+   - 关键词：000、10、150、18、20、2026
+   - 置信度：多源交叉验证，可信度较高
+   - 来源：
+- [The Smartest Vanguard ETF to Buy With $1,000 Right Now](https://finance.yahoo.com/markets/stocks/articles/smartest-vanguard-etf-buy-1-193700141.html)（Yahoo Finance）
+- [Wall Street Is Losing Confidence In PVH Corp (PVH), Is The Stock A Buy?](https://finance.yahoo.com/markets/stocks/articles/wall-street-losing-confidence-pvh-191514572.html)（Yahoo Finance）
+- [Lincoln National Corporation (LNC) Is One Of The Top Extreme Value Stocks To Buy Now](https://finance.yahoo.com/markets/stocks/articles/lincoln-national-corporation-lnc-one-191506722.html)（Yahoo Finance）
+- [Wall Street Pessimism Has Made Universal Health Services (UHS) Stock A Top Extreme Value Stock To Buy Now](https://finance.yahoo.com/healthcare/articles/wall-street-pessimism-made-universal-191457323.html)（Yahoo Finance）
+- [Equinox Gold (EQX) Just Cleared A Major Roadblock, Is The Stock Ready To Skyrocket?](https://finance.yahoo.com/markets/stocks/articles/equinox-gold-eqx-just-cleared-19144</description>
+    </item>
+  </channel>
+</rss>

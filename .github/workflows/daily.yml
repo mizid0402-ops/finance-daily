@@ -1,0 +1,51 @@
+name: Finance Daily
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 23 * * *"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: python -m pytest -q
+
+      - name: Generate daily report
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
+          OPENAI_MODEL: ${{ secrets.OPENAI_MODEL }}
+          SITE_URL: ${{ vars.SITE_URL || secrets.SITE_URL }}
+        run: python src/main.py
+
+      - name: Commit generated outputs
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add backup rss.xml
+          if git diff --cached --quiet; then
+            echo "No generated output changes to commit. Skipping."
+          else
+            git commit -m "chore: generate finance daily"
+            git push
+          fi
