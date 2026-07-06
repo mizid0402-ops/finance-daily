@@ -7,13 +7,10 @@ from collector.models import EventCluster
 
 
 REQUIRED_SECTIONS = [
-    "## 一、市场总览",
-    "## 二、今日核心事件",
-    "## 三、产业链受益方向",
-    "## 四、资金更该关注什么类型的公司",
-    "## 五、相关公司映射",
-    "## 六、风险提示",
-    "## 七、明日关注",
+    "【核心事件】",
+    "【产业逻辑】",
+    "【投资框架】",
+    "【资金更该买什么类型的公司】",
 ]
 
 _REMOVE_PATTERNS = [
@@ -40,6 +37,37 @@ def _format_sources(cluster: EventCluster) -> str:
     return "\n".join(lines)
 
 
+def _report_title(report_date: date) -> str:
+    return f"{report_date.month}月{report_date.day}日信息总结"
+
+
+def _stock_ideas(cluster: EventCluster) -> list[str]:
+    text = f"{cluster.title} {cluster.category} {' '.join(cluster.keywords)}".lower()
+    ideas_by_theme = [
+        (("ai", "芯片", "半导体", "算力"), ["中芯国际", "北方华创"]),
+        (("机器人", "减速器", "执行器", "液冷"), ["汇川技术", "埃斯顿"]),
+        (("光通信", "光芯片", "cpo", "pcb"), ["中际旭创", "沪电股份"]),
+        (("存储", "封装", "材料", "ddr"), ["长电科技", "雅克科技"]),
+        (("新能源", "储能", "电池", "光伏"), ["宁德时代", "阳光电源"]),
+    ]
+    for tokens, ideas in ideas_by_theme:
+        if any(token in text for token in tokens):
+            return ideas
+    return ["行业龙头", "关键设备/材料卡位公司"]
+
+
+def _capital_focus(cluster: EventCluster) -> str:
+    stock_ideas = "、".join(_stock_ideas(cluster)[:2])
+    return (
+        "资金应优先寻找订单已验证、客户明确、即将或正在量产的公司；其次关注行业龙头"
+        "或关键环节卡位公司，要求具备技术壁垒和议价能力；再筛选受益于高端化、"
+        "产品升级、国产替代，且产能释放明确、收入和利润有望连续上修的标的。"
+        "若估值合理且市场预期尚未充分反映业绩改善，可作为重点跟踪方向。"
+        "仅有概念、无订单、无客户验证或估值过高的公司应提示风险。"
+        f"\n\n个股线索：{stock_ideas}（仅作研究线索，需继续核验订单、客户、量产和估值）。"
+    )
+
+
 def _event_block(clusters: list[EventCluster]) -> str:
     blocks: list[str] = []
     for index, cluster in enumerate(clusters[:8], start=1):
@@ -54,11 +82,25 @@ def _event_block(clusters: list[EventCluster]) -> str:
         blocks.append(
             "\n".join(
                 [
-                    f"{index}. **{cluster.title}**",
-                    f"   - 分类：{cluster.category}",
-                    f"   - 关键词：{keywords}",
-                    f"   - 置信度：{confidence}",
-                    f"   - 来源：\n{_format_sources(cluster)}",
+                    f"## {index:02d} {cluster.category}",
+                    "",
+                    "【核心事件】",
+                    f"{cluster.title}。关键词：{keywords}。信息置信度：{confidence}。",
+                    "",
+                    "【产业逻辑】",
+                    "事件催化需要继续验证需求端订单、供给端产能、价格变化与政策执行节奏。"
+                    f"当前主题指向 {cluster.category}，资金会更关注从上游资源、核心设备、"
+                    "关键零部件到下游应用的兑现链条。",
+                    "",
+                    "【投资框架】",
+                    "围绕“供应链需求 + 国产导入 + 高端产品放量”三条主线，关注订单、客户、"
+                    "量产、毛利率和产能利用率的连续验证，避免只按概念热度定价。",
+                    "",
+                    "【资金更该买什么类型的公司】",
+                    _capital_focus(cluster),
+                    "",
+                    "来源：",
+                    _format_sources(cluster),
                 ]
             )
         )
@@ -91,30 +133,18 @@ def build_fallback_report(report_date: date, clusters: list[EventCluster], llm_e
         if llm_error
         else ""
     )
+    title = _report_title(report_date)
+    summary = _cluster_summary(clusters)
     return "\n\n".join(
         [
-            f"# 财经日报-{report_date.isoformat()}",
-            REQUIRED_SECTIONS[0],
-            f"最近 24 小时财经信息按主题聚合如下：\n\n{_cluster_summary(clusters)}{error_note}",
-            REQUIRED_SECTIONS[1],
+            f"# {title}",
+            "AI 摘要",
+            "阶段重点 | 产业逻辑 | 投资线索",
+            f"最近 24 小时财经信息按主题聚合如下：\n\n{summary}{error_note}",
             _event_block(clusters),
-            REQUIRED_SECTIONS[2],
-            "事件催化需要继续验证需求端订单、供给端产能、价格变化与政策执行节奏。优先观察上游资源、核心设备、关键零部件、数据/算力基础设施和高壁垒服务环节。",
-            REQUIRED_SECTIONS[3],
-            "资金更该关注具备现金流韧性、行业份额提升、订单可验证、资产负债表健康、估值与盈利增速匹配的公司类型。本日报不提供买卖指令。",
-            REQUIRED_SECTIONS[4],
-            "请结合事件逻辑对以下方面进行核实验证：\n"
-            "- **所属市场**：确认公司上市地点（A股 / 港股 / 美股）\n"
-            "- **产业链环节**：确认公司在产业链中的具体位置\n"
-            "- **受益原因**：分析事件与公司业务的实际关联与传导逻辑\n"
-            "- **催化强度**：基于订单、政策、需求等可观测证据判断\n"
-            "- **风险点**：审查业绩兑现风险、估值波动、行业竞争等\n\n"
-            "| 公司 | 所属市场 | 所属产业链环节 | 受益原因 | 催化强度 | 风险点 |\n"
-            "|---|---|---|---|---|---|\n"
-            "| 待 LLM 补全 | A股 / 港股 / 美股 | 待核验 | 需结合事件与产业链位置确认 | 中 | 信息不足、业绩兑现不及预期 |",
-            REQUIRED_SECTIONS[5],
-            "- 新闻源可能存在延迟、重复、标题党或付费墙导致的信息缺口。\n- 产业链映射仅用于研究线索，不构成投资建议。\n- 需警惕政策落地不及预期、需求验证不足、估值波动和流动性变化。",
-            REQUIRED_SECTIONS[6],
-            "- 继续跟踪核心事件是否出现公告、订单、价格、库存、产能或监管文件验证。\n- 关注美股盘后、A股/港股开盘后的资金反馈与产业链扩散方向。",
+            "## 风险提示",
+            "- 新闻源可能存在延迟、重复、标题党或付费墙导致的信息缺口。\n"
+            "- 个股线索仅用于研究跟踪，不构成投资建议。\n"
+            "- 需警惕政策落地不及预期、需求验证不足、估值波动和流动性变化。",
         ]
     )

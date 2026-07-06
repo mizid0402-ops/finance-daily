@@ -1,46 +1,79 @@
 {
-  "run_id": "finance_daily_next_blocks_20260706",
-  "goal_contract_ref": ".agent-goal-relay/relay-state/state.md",
-  "exec_plan_ref": "docs/superpowers/plans/2026-07-06-finance-daily-next-blocks.md",
-  "updated_at": "2026-07-06T15:23:00+08:00",
-  "current_phase_id": "phase_04_human_gate",
-  "current_work_block_id": "006-github-remote-setup",
-  "budget_snapshot": {
-    "sessions_used": 1,
-    "tokens_used": 0,
-    "elapsed_minutes": 0,
-    "tool_calls_used": 0,
-    "external_cost": {
-      "amount": 0,
-      "currency": ""
-    },
-    "remaining_notes": "Local low-risk work-blocks are complete; external GitHub and publishing decisions require human input."
-  },
-  "pending_approvals_count": 0,
-  "relay_state": "wait_human",
-  "recent_results_summary": {
-    "latest_outcome": "Completed report-analysis, RSS publishing URL, Actions hardening, and GitHub remote setup preparation without external writes.",
-    "completed_work_block_ids": [
-      "003-report-analysis",
-      "004-rss-publishing-url",
-      "005-actions-hardening",
-      "006-github-remote-setup"
-    ],
-    "evidence_refs": [
-      ".agent-goal-relay/worker-results/003-report-analysis.md",
-      ".agent-goal-relay/worker-results/004-rss-publishing-url.md",
-      ".agent-goal-relay/worker-results/005-actions-hardening.md",
-      ".agent-goal-relay/worker-results/006-github-remote-setup.md"
-    ],
-    "next_recommended_action": "Wait for the user to choose GitHub repository, visibility, branch, SITE_URL, Pages, and whether to push.",
-    "last_session_id": "codex_20260706"
-  },
-  "recent_result_summary": "Prepared GitHub remote setup guide and stopped before external repository, push, Pages, secrets, or SITE_URL decisions.",
-  "next_action": "Ask the user for GitHub remote setup choices before any external action.",
-  "open_risks": [
-    "No GitHub remote repository is configured.",
-    "GitHub Actions has not run on GitHub yet.",
-    "Real SITE_URL and optional GitHub Pages hosting are not chosen.",
-    "OpenAI/DeepSeek secrets are not configured."
-  ]
+    "run_id":  "finance_daily_next_blocks_20260706",
+    "goal_contract_ref":  ".agent-goal-relay/relay-state/state.md",
+    "exec_plan_ref":  "docs/superpowers/plans/2026-07-06-finance-daily-next-blocks.md",
+    "updated_at":  "2026-07-06T08:27:44.7048023Z",
+    "current_phase_id":  "",
+    "current_work_block_id":  "",
+    "budget_snapshot":  {
+                            "sessions_used":  1,
+                            "tokens_used":  0,
+                            "elapsed_minutes":  0,
+                            "tool_calls_used":  0,
+                            "external_cost":  {
+                                                  "amount":  0,
+                                                  "currency":  ""
+                                              },
+                            "remaining_notes":  "Local low-risk work-blocks are complete; external GitHub and publishing decisions require human input.",
+                            "current_work_block":  {
+                                                       "model_calls":  1,
+                                                       "external_platform_calls":  0,
+                                                       "tool_calls":  18,
+                                                       "elapsed_seconds":  900,
+                                                       "tool_output_chars":  65000,
+                                                       "result_chars":  1800
+                                                   },
+                            "last_worker_stage":  {
+                                                      "worker_run_id":  "codex_20260706_rss_card_format",
+                                                      "stage_id":  "010-rss-card-format",
+                                                      "stage_type":  "implementation",
+                                                      "budget_usage":  {
+                                                                           "model_calls":  1,
+                                                                           "external_platform_calls":  0,
+                                                                           "tool_calls":  18,
+                                                                           "elapsed_seconds":  900,
+                                                                           "tool_output_chars":  65000,
+                                                                           "result_chars":  1800
+                                                                       },
+                                                      "subagent_budget_usage_total":  null,
+                                                      "budget_accounting_status":  null
+                                                  }
+                        },
+    "pending_approvals_count":  0,
+    "relay_state":  "wait_human",
+    "recent_results_summary":  {
+                                   "latest_outcome":  "RSS daily format updated to AI summary cards with capital-focus company traits and limited stock ideas; local generation succeeded through fallback because OPENAI_API_KEY is not set.",
+                                   "completed_work_block_ids":  [
+                                                                    "003-report-analysis",
+                                                                    "004-rss-publishing-url",
+                                                                    "005-actions-hardening",
+                                                                    "006-github-remote-setup",
+                                                                    "007-existing-remote-selected",
+                                                                    "008-api-key-fallback-review",
+                                                                    "010-rss-card-format"
+                                                                ],
+                                   "evidence_refs":  [
+                                                         ".agent-goal-relay/worker-results/003-report-analysis.md",
+                                                         ".agent-goal-relay/worker-results/004-rss-publishing-url.md",
+                                                         ".agent-goal-relay/worker-results/005-actions-hardening.md",
+                                                         ".agent-goal-relay/worker-results/006-github-remote-setup.md",
+                                                         ".agent-goal-relay/worker-results/007-existing-remote-selected.md",
+                                                         ".agent-goal-relay/worker-results/008-api-key-fallback-review.md"
+                                                     ],
+                                   "next_recommended_action":  "Review the generated RSS/Markdown style, then configure OPENAI_API_KEY if LLM-written richer cards are desired.",
+                                   "last_session_id":  "codex_20260706"
+                               },
+    "recent_result_summary":  "RSS daily format updated to AI summary cards with capital-focus company traits and limited stock ideas; local generation succeeded through fallback because OPENAI_API_KEY is not set.",
+    "next_action":  "Review the generated RSS/Markdown style, then configure OPENAI_API_KEY if LLM-written richer cards are desired.",
+    "open_risks":  [
+                       "GitHub Actions has not run on GitHub yet.",
+                       "Production SITE_URL and optional GitHub Pages hosting are not chosen.",
+                       "OPENAI_API_KEY is not configured, so generation falls back to the rule-based report."
+                   ],
+    "worker_last_result":  {
+                               "worker_run_id":  "codex_20260706_rss_card_format",
+                               "status":  "completed",
+                               "stage_id":  "010-rss-card-format",
+                               "stage_type":  "implementation"
+                           }
 }

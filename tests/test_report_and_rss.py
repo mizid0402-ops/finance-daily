@@ -29,14 +29,14 @@ def test_fallback_report_contains_required_sections_and_no_buy_advice():
     report = build_fallback_report(date(2026, 7, 6), [sample_cluster()], llm_error="missing api key")
 
     required_headings = [
-        "# 财经日报-2026-07-06",
-        "## 一、市场总览",
-        "## 二、今日核心事件",
-        "## 三、产业链受益方向",
-        "## 四、资金更该关注什么类型的公司",
-        "## 五、相关公司映射",
-        "## 六、风险提示",
-        "## 七、明日关注",
+        "# 7月6日信息总结",
+        "AI 摘要",
+        "## 01 科技与半导体",
+        "【核心事件】",
+        "【产业逻辑】",
+        "【投资框架】",
+        "【资金更该买什么类型的公司】",
+        "## 风险提示",
     ]
     for heading in required_headings:
         assert heading in report
@@ -52,7 +52,7 @@ def test_generate_report_uses_fallback_without_api_key(monkeypatch):
     report, error = generate_report_with_llm(date(2026, 7, 6), [sample_cluster()])
 
     assert error == "OPENAI_API_KEY is not set"
-    assert report.startswith("# 财经日报-2026-07-06")
+    assert report.startswith("# 7月6日信息总结")
     assert "规则模板草稿" in report
 
 
@@ -92,15 +92,34 @@ def test_fallback_source_confidence():
     assert "多源" in report2
 
 
-def test_fallback_company_mapping_asks_verification():
-    """Section 五 asks to verify market, industry-chain, catalyst, risk, and evidence."""
+def test_fallback_capital_focus_asks_verification():
+    """Capital focus asks to verify orders, customers, mass production, valuation, and risk."""
     report = build_fallback_report(date(2026, 7, 6), [sample_cluster()], llm_error=None)
 
-    fifth_section = report[
-        report.index("## 五、相关公司映射") : report.index("## 六、风险提示")
+    capital_section = report[
+        report.index("【资金更该买什么类型的公司】") : report.index("来源：")
     ]
-    assert "验证" in fifth_section
-    assert "证据" in fifth_section
+    assert "订单" in capital_section
+    assert "客户" in capital_section
+    assert "量产" in capital_section
+    assert "估值" in capital_section
+    assert "风险" in capital_section
+
+
+def test_fallback_report_uses_summary_card_format_with_capital_focus():
+    report = build_fallback_report(date(2026, 7, 6), [sample_cluster()], llm_error=None)
+
+    assert report.startswith("# 7月6日信息总结")
+    assert "AI 摘要" in report
+    assert "## 01 科技与半导体" in report
+    assert "【核心事件】" in report
+    assert "【产业逻辑】" in report
+    assert "【投资框架】" in report
+    assert "【资金更该买什么类型的公司】" in report
+    assert "订单已验证、客户明确、即将或正在量产" in report
+    assert "行业龙头或关键环节卡位" in report
+    assert "AI 芯片需求带动半导体产业链" in report
+    assert report.count("个股线索：") == 1
 
 
 def test_markdown_and_rss_outputs_are_written_as_valid_xml(tmp_path):
@@ -115,7 +134,7 @@ def test_markdown_and_rss_outputs_are_written_as_valid_xml(tmp_path):
     )
 
     assert markdown_path.name == "2026-07-06.md"
-    assert markdown_path.read_text(encoding="utf-8").startswith("# 财经日报-2026-07-06")
+    assert markdown_path.read_text(encoding="utf-8").startswith("# 7月6日信息总结")
 
     root = ElementTree.fromstring(rss_path.read_text(encoding="utf-8"))
     assert root.tag == "rss"
@@ -123,7 +142,11 @@ def test_markdown_and_rss_outputs_are_written_as_valid_xml(tmp_path):
     assert channel is not None
     assert channel.findtext("title") == "财经 AI 日报"
     assert channel.findtext("description") == "自动生成的财经新闻、产业链分析与公司映射日报"
-    assert channel.findtext("item/title") == "财经日报-2026-07-06"
+    assert channel.findtext("item/title") == "7月6日信息总结"
+    item_description = channel.findtext("item/description")
+    assert item_description is not None
+    assert 'class="summary-card"' in item_description
+    assert "【资金更该买什么类型的公司】" in item_description
 
 
 # ── SITE_URL configurable base URL ──────────────────────────────────────────

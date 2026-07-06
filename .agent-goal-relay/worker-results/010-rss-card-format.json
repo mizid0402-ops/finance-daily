@@ -1,0 +1,62 @@
+{
+  "worker_run_id": "codex_20260706_rss_card_format",
+  "stage_id": "010-rss-card-format",
+  "stage_type": "implementation",
+  "status": "completed",
+  "result_summary": "Updated the RSS daily report format to image-style AI summary cards with core event, industry logic, investment framework, and capital-focus stock-selection guidance.",
+  "executed_work_block_ids": [
+    "010-rss-card-format"
+  ],
+  "relay_recommendation": "wait_human",
+  "budget_usage": {
+    "model_calls": 1,
+    "external_platform_calls": 0,
+    "tool_calls": 18,
+    "elapsed_seconds": 900,
+    "tool_output_chars": 65000,
+    "result_chars": 1800
+  },
+  "hard_stop_flags": {
+    "external_write_executed": false,
+    "history_dir_read": false,
+    "history_path_enumerated": false,
+    "raw_tool_output_forwarded": false
+  },
+  "ledger_events": {
+    "work_blocks": [
+      {
+        "block_id": "010-rss-card-format",
+        "status": "completed",
+        "risk_level": "low",
+        "summary": "RSS and Markdown daily reports now use AI summary cards; each topic includes core event, industry logic, investment framework, and capital-focus company traits with 1-2 stock ideas."
+      }
+    ],
+    "session_log": [
+      {
+        "event_type": "worker_stage_completed",
+        "summary": "Implemented card-style fallback report generation, RSS HTML rendering, LLM prompt alignment, tests, and regenerated today's backup Markdown and rss.xml."
+      }
+    ],
+    "evidence": [
+      {
+        "claim": "Focused RSS/report tests passed after the format change.",
+        "evidence_ref": "py -m pytest tests/test_report_and_rss.py -q => 11 passed"
+      },
+      {
+        "claim": "Full test suite passed after the format change.",
+        "evidence_ref": "py -m pytest -q => 15 passed"
+      },
+      {
+        "claim": "Local generation produced updated backup/2026-07-06.md and rss.xml.",
+        "evidence_ref": "py src/main.py => articles=99 unique=98 clusters=16; llm_fallback=OPENAI_API_KEY is not set"
+      }
+    ]
+  },
+  "run_status_patch": {
+    "relay_state": "wait_human",
+    "current_phase_id": "",
+    "current_work_block_id": "",
+    "latest_outcome": "RSS daily format updated to AI summary cards with capital-focus company traits and limited stock ideas; local generation succeeded through fallback because OPENAI_API_KEY is not set.",
+    "next_recommended_action": "Review the generated RSS/Markdown style, then configure OPENAI_API_KEY if LLM-written richer cards are desired."
+  }
+}
