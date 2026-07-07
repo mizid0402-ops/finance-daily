@@ -15,10 +15,12 @@ permissions:
 jobs:
   generate:
     runs-on: ubuntu-latest
-
+    env:
+      TZ: Asia/Shanghai
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.ref }}
           fetch-depth: 0
 
       - uses: actions/setup-python@v5
@@ -41,7 +43,7 @@ jobs:
           SITE_URL: ${{ vars.SITE_URL || secrets.SITE_URL }}
         run: python src/main.py
 
-      - name: Commit generated outputs
+      - name: Commit and push generated outputs
         shell: bash
         run: |
           set -euo pipefail
@@ -56,16 +58,16 @@ jobs:
             exit 0
           fi
 
-          git commit -m "chore: generate finance daily"
+          git commit -m "chore: generate finance daily ($(date '+%Y-%m-%d'))"
 
           for attempt in 1 2 3; do
-            if git push origin HEAD:"$GITHUB_REF_NAME"; then
+            if git push origin "HEAD:${GITHUB_REF_NAME}"; then
               exit 0
             fi
 
-            echo "Push rejected; rebasing and retrying (attempt $attempt/3)."
-            git pull --rebase --autostash origin "$GITHUB_REF_NAME"
+            echo "Push rejected; rebasing and retrying (attempt ${attempt}/3)." >&2
+            git pull --rebase origin "${GITHUB_REF_NAME}"
           done
 
-          echo "Failed to push generated outputs after 3 attempts."
+          echo "Failed to push generated outputs after 3 attempts." >&2
           exit 1
