@@ -1,4 +1,5 @@
 from datetime import date, datetime, timezone
+from pathlib import Path
 from xml.etree import ElementTree
 
 from analyzer.llm import generate_report_with_llm
@@ -190,3 +191,46 @@ def test_trailing_slash_no_double_slash_in_item_link(tmp_path):
     assert item_link is not None
     assert "example.com//backup" not in item_link
     assert item_link == "https://example.com/backup/2026-07-06.md"
+
+
+def test_rss_includes_self_link_and_recent_report_items(tmp_path):
+    backup_dir = tmp_path / "backup"
+    write_markdown_report("# old report", date(2026, 7, 5), backup_dir)
+    write_markdown_report("# current report", date(2026, 7, 6), backup_dir)
+
+    rss_path = write_rss(
+        report_date=date(2026, 7, 6),
+        report_markdown="# current report",
+        output_path=tmp_path / "rss.xml",
+        site_url="https://example.com/finance-daily/",
+        backup_dir=backup_dir,
+    )
+
+    root = ElementTree.fromstring(rss_path.read_text(encoding="utf-8"))
+    assert root.attrib == {"version": "2.0"}
+    channel = root.find("channel")
+    assert channel is not None
+
+    atom_self = channel.find("{http://www.w3.org/2005/Atom}link")
+    assert atom_self is not None
+    assert atom_self.attrib == {
+        "href": "https://example.com/finance-daily/rss.xml",
+        "rel": "self",
+        "type": "application/rss+xml",
+    }
+
+    item_links = [item.findtext("link") for item in channel.findall("item")]
+    assert item_links == [
+        "https://example.com/finance-daily/backup/2026-07-06.md",
+        "https://example.com/finance-daily/backup/2026-07-05.md",
+    ]
+
+
+def test_pages_head_custom_exposes_rss_autodiscovery():
+    head_custom = Path("_includes/head-custom.html")
+
+    text = head_custom.read_text(encoding="utf-8")
+
+    assert 'rel="alternate"' in text
+    assert 'type="application/rss+xml"' in text
+    assert 'href="{{ \'/rss.xml\' | relative_url }}"' in text

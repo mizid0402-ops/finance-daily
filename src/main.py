@@ -49,6 +49,7 @@ def main() -> int:
         report_markdown=report,
         output_path=PROJECT_ROOT / "rss.xml",
         site_url=get_site_url(),
+        backup_dir=PROJECT_ROOT / "backup",
     )
 
     print(f"articles={len(articles)} unique={len(unique_articles)} clusters={len(clusters)}")

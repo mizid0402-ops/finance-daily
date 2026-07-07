@@ -80,27 +80,62 @@ def _render_summary_html(report_markdown: str) -> str:
     return "".join(html)
 
 
-def write_rss(report_date: date, report_markdown: str, output_path: Path, site_url: str) -> Path:
+def _report_entries(
+    report_date: date, report_markdown: str, backup_dir: Path | None, max_items: int
+) -> list[tuple[date, str]]:
+    entries: dict[date, str] = {report_date: report_markdown}
+    if backup_dir is not None and backup_dir.exists():
+        for path in backup_dir.glob("*.md"):
+            try:
+                entry_date = date.fromisoformat(path.stem)
+            except ValueError:
+                continue
+            if entry_date <= report_date:
+                entries[entry_date] = path.read_text(encoding="utf-8")
+
+    return sorted(entries.items(), reverse=True)[:max_items]
+
+
+def _render_item(entry_date: date, markdown: str, site_url: str) -> str:
+    title = _item_title(entry_date)
+    link = f"{site_url.rstrip('/')}/backup/{entry_date.isoformat()}.md"
+    pub_date = format_datetime(datetime.combine(entry_date, datetime.min.time(), tzinfo=timezone.utc))
+    description = escape(_render_summary_html(markdown))
+    return f"""    <item>
+      <title>{escape(title)}</title>
+      <link>{escape(link)}</link>
+      <guid isPermaLink="true">{escape(link)}</guid>
+      <pubDate>{pub_date}</pubDate>
+      <description>{description}</description>
+    </item>"""
+
+
+def write_rss(
+    report_date: date,
+    report_markdown: str,
+    output_path: Path,
+    site_url: str,
+    *,
+    backup_dir: Path | None = None,
+    max_items: int = 14,
+) -> Path:
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    title = _item_title(report_date)
-    link = f"{site_url.rstrip('/')}/backup/{report_date.isoformat()}.md"
-    pub_date = format_datetime(datetime.combine(report_date, datetime.min.time(), tzinfo=timezone.utc))
-    description = escape(_render_summary_html(report_markdown))
+    site_url = site_url.rstrip("/")
+    rss_url = f"{site_url}/rss.xml"
+    items = "\n".join(
+        _render_item(entry_date, markdown, site_url)
+        for entry_date, markdown in _report_entries(report_date, report_markdown, backup_dir, max_items)
+    )
     xml = f"""<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>财经 AI 日报</title>
     <link>{escape(site_url)}</link>
     <description>自动生成的财经新闻、产业链分析与公司映射日报</description>
     <language>zh-CN</language>
     <lastBuildDate>{format_datetime(datetime.now(timezone.utc))}</lastBuildDate>
-    <item>
-      <title>{escape(title)}</title>
-      <link>{escape(link)}</link>
-      <guid>{escape(link)}</guid>
-      <pubDate>{pub_date}</pubDate>
-      <description>{description}</description>
-    </item>
+    <atom:link href="{escape(rss_url)}" rel="self" type="application/rss+xml" />
+{items}
   </channel>
 </rss>
 """
